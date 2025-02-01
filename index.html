@@ -90,6 +90,11 @@
             top: 10px;
             left: 10px;
         }
+        .nav-right {
+            position: absolute;
+            top: 60px; /* Adjusted to be below the "Sätted" button */
+            right: 10px;
+        }
         .nav button {
             background-color: #007bff;
             color: #fff;
@@ -152,17 +157,6 @@
         .edit-button:hover {
             background-color: #e0a800;
         }
-        .clear-button {
-            background-color: #ffc107;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .clear-button:hover {
-            background-color: #e0a800;
-        }
         .dark-mode {
             background-color: #121212;
             color: #e0e0e0;
@@ -201,12 +195,6 @@
             background-color: #ffc107;
         }
         .dark-mode .edit-button:hover {
-            background-color: #e0a800;
-        }
-        .dark-mode .clear-button {
-            background-color: #ffc107;
-        }
-        .dark-mode .clear-button:hover {
             background-color: #e0a800;
         }
         .error-message {
@@ -305,32 +293,6 @@
         .adjust-buttons button:hover {
             background-color: #0056b3;
         }
-        .save-button {
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .save-button:hover {
-            background-color: #218838;
-        }
-        .refresh-button {
-            background-color: #1335bd;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
-        }
-        .refresh-button:hover {
-            background-color: #2e09ea;
-        }
-        .refresh-icon {
-            font-size: 16px;
-        }
         .button-container {
             display: flex;
             justify-content: space-between;
@@ -346,16 +308,84 @@
             padding: 5px;
             font-size: 16px;
         }
+        #currentDateTime {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            color: #333;
+        }
+        .password-prompt {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            width: 300px;
+            text-align: center;
+        }
+        .password-prompt h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .password-prompt input {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: none; /* Remove border */
+            border-bottom: 2px solid #ddd; /* Add bottom border */
+            border-radius: 0; /* Remove border radius */
+            font-size: 16px;
+            width: 100%;
+            outline: none; /* Remove outline */
+        }
+        .password-prompt input:focus {
+            border-bottom: 2px solid #007bff; /* Change bottom border color on focus */
+        }
+        .password-prompt button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .password-prompt button:hover {
+            background-color: #0056b3;
+        }
+        .password-prompt .close-button {
+            background-color: #dc3545;
+        }
+        .password-prompt .close-button:hover {
+            background-color: #c82333;
+        }
+        .password-prompt .error-message {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="nav">
         <button id="showForm" aria-label="Show Form">Tööriist</button>
         <button id="showSavedSearches" aria-label="Show Saved Searches">Hanked</button>
+    </div>
+    <div id="currentDateTime"></div>
+    <button id="settingsButton" style="position: absolute; top: 10px; right: 10px;">Sätted</button>
+    <div class="nav-right">
         <button id="showHistory" aria-label="Show History">Ajalugu</button>
     </div>
-    <div id="currentDateTime" style="position: absolute; top: 10px; right: 10px;"></div>
-    <button id="settingsButton" style="position: absolute; top: 25px; right: 10px;">Sätted</button>
     <div class="container" id="formContainer">
         <h2>Menetluse andmed</h2>
         <form id="procurementForm">
@@ -470,6 +500,15 @@
         </table>
     </div>
     <button id="toggleDarkMode" style="position: absolute; bottom: 10px; left: 10px;">Toggle Dark Mode</button>
+    <div class="password-prompt" id="passwordPrompt">
+        <h3>Enter Password</h3>
+        <input type="password" id="passwordInput" placeholder="Password">
+        <div>
+            <button id="passwordSubmit">Submit</button>
+            <button id="passwordClose" class="close-button">Close</button>
+        </div>
+        <p class="error-message" id="passwordError" style="display: none;">Incorrect password. Please try again.</p>
+    </div>
     <script>
         const procedureData = {
             "Lihthankemenetlus asjade hankelepingu sõlmimiseks": { taotlusteAeg: 0, pakkumusteAeg: 10, piirmäär: 60000 },
@@ -529,12 +568,46 @@
 
         let settings = { ...defaultSettings };
 
+        const correctPassword = 'admin';
+        let passwordValidUntil = null;
+
+        function showPasswordPrompt(callback) {
+            const now = new Date();
+            if (passwordValidUntil && now < passwordValidUntil) {
+                callback();
+                return;
+            }
+
+            const passwordPrompt = document.getElementById('passwordPrompt');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            passwordPrompt.style.display = 'block';
+            passwordInput.value = '';
+            passwordError.style.display = 'none';
+
+            document.getElementById('passwordSubmit').onclick = function() {
+                if (passwordInput.value === correctPassword) {
+                    passwordPrompt.style.display = 'none';
+                    passwordValidUntil = new Date(now.getTime() + 10 * 60000); // 10 minutes from now
+                    callback();
+                } else {
+                    passwordError.style.display = 'block';
+                }
+            };
+
+            document.getElementById('passwordClose').onclick = function() {
+                passwordPrompt.style.display = 'none';
+            };
+        }
+
         document.getElementById('settingsButton').addEventListener('click', function() {
-            document.getElementById('settingsContainer').classList.toggle('hidden');
-            document.getElementById('formContainer').classList.add('hidden');
-            document.getElementById('savedSearchesContainer').classList.add('hidden');
-            loadSettings();
-            loadProcedureTypes();
+            showPasswordPrompt(() => {
+                document.getElementById('settingsContainer').classList.toggle('hidden');
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('savedSearchesContainer').classList.add('hidden');
+                loadSettings();
+                loadProcedureTypes();
+            });
         });
 
         document.getElementById('settingsForm').addEventListener('submit', function(event) {
@@ -927,11 +1000,13 @@
         });
 
         document.getElementById('showHistory').addEventListener('click', function() {
-            document.getElementById('formContainer').classList.add('hidden');
-            document.getElementById('savedSearchesContainer').classList.add('hidden');
-            document.getElementById('settingsContainer').classList.add('hidden');
-            document.getElementById('historyContainer').classList.remove('hidden');
-            loadHistory();
+            showPasswordPrompt(() => {
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('savedSearchesContainer').classList.add('hidden');
+                document.getElementById('settingsContainer').classList.add('hidden');
+                document.getElementById('historyContainer').classList.remove('hidden');
+                loadHistory();
+            });
         });
 
         function updateSavedSearchesTable() {
@@ -985,9 +1060,10 @@
 
         async function loadHistory() {
             try {
-                const response = await fetch('http://localhost:3000/load-history');
+                const response = await fetch('http://localhost:8080/history.json');
                 if (response.ok) {
                     const savedHistory = await response.json();
+                    console.log('Fetched history:', savedHistory); // Debugging statement
                     history.length = 0; // Clear current history
                     savedHistory.forEach(item => {
                         const procurement = new PublicProcurement(
@@ -1004,7 +1080,7 @@
                     updateHistoryTable();
                     populateFilterOptions();
                 } else {
-                    console.error('Failed to load history');
+                    console.error('Failed to load history:', response.statusText);
                 }
             } catch (error) {
                 console.error('Error fetching history:', error);
@@ -1015,6 +1091,7 @@
             const tableBody = document.getElementById('historyTableBody');
             tableBody.innerHTML = '';
             history.forEach((procurement, index) => {
+                console.log('Adding row for:', procurement); // Debugging statement
                 tableBody.innerHTML += procurement.generateTableRow(index);
             });
         }
@@ -1024,10 +1101,7 @@
             const dates = [...new Set(history.map(procurement => procurement.contractSigningDate.toISOString().split('T')[0]))];
             filterSelect.innerHTML = '<option value="all">Kõik</option>';
             dates.forEach(date => {
-                const option = document.createElement('option');
-                option.value = date;
-                option.textContent = date;
-                filterSelect.appendChild(option);
+                filterSelect.innerHTML += `<option value="${date}">${date}</option>`;
             });
         }
 
