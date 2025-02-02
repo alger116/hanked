@@ -6,7 +6,7 @@
     <title>Riigihanke Andmed</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif; /* Use Google Font */
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
@@ -26,6 +26,7 @@
         h2 {
             color: #333;
             text-align: center;
+            margin-bottom: 20px; /* Consistent spacing */
         }
         form {
             display: flex;
@@ -53,6 +54,7 @@
             margin: 5px;
             flex: 1; /* Ensure buttons take equal space */
             text-align: center; /* Center text */
+            transition: background-color 0.3s; /* Smooth hover effect */
         }
         button:hover, .save-button:hover, .refresh-button:hover, .clear-button:hover {
             background-color: #0056b3;
@@ -89,21 +91,27 @@
             position: absolute;
             top: 10px;
             left: 10px;
-        }
-        .nav-right {
-            position: absolute;
-            top: 60px; /* Adjusted to be below the "Sätted" button */
-            right: 10px;
+            display: flex;
         }
         .nav button {
             background-color: #007bff;
             color: #fff;
             border: none;
-            padding: 10px;
+            padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
+            margin: 0 5px;
+            transition: background-color 0.3s; /* Smooth hover effect */
+            display: flex;
+            align-items: center;
+        }
+        .nav button i {
+            margin-right: 5px;
         }
         .nav button:hover {
+            background-color: #0056b3;
+        }
+        .nav button.active {
             background-color: #0056b3;
         }
         .hidden {
@@ -113,7 +121,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: #f9f9f9; /* Light background for table */
+            background-color: #f4f4f4; /* Match overall page background color */
         }
         table, th, td {
             border: 1px solid #ddd;
@@ -142,6 +150,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s; /* Smooth hover effect */
         }
         .delete-button:hover {
             background-color: #c82333;
@@ -153,6 +162,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s; /* Smooth hover effect */
         }
         .edit-button:hover {
             background-color: #e0a800;
@@ -215,14 +225,11 @@
                 padding: 10px;
             }
             .nav {
-                position: static;
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 10px;
+                flex-direction: column;
+                align-items: flex-start;
             }
             .nav button {
-                flex: 1;
-                margin: 0 5px;
+                margin: 5px 0;
             }
             table, th, td {
                 font-size: 14px;
@@ -245,6 +252,17 @@
             #toggleDarkMode {
                 bottom: 20px;
                 left: 20px;
+            }
+            .password-prompt {
+                width: 90%; /* Adjust width for mobile */
+                padding: 15px; /* Adjust padding for mobile */
+            }
+            .password-prompt input {
+                font-size: 14px; /* Adjust font size for mobile */
+            }
+            .password-prompt button {
+                font-size: 14px; /* Adjust font size for mobile */
+                padding: 8px 15px; /* Adjust padding for mobile */
             }
         }
         .result-card {
@@ -289,6 +307,7 @@
             border-radius: 4px;
             cursor: pointer;
             margin: 0 2px;
+            transition: background-color 0.3s; /* Smooth hover effect */
         }
         .adjust-buttons button:hover {
             background-color: #0056b3;
@@ -359,6 +378,7 @@
             cursor: pointer;
             font-size: 16px;
             margin-right: 10px;
+            transition: background-color 0.3s; /* Smooth hover effect */
         }
         .password-prompt button:hover {
             background-color: #0056b3;
@@ -375,17 +395,17 @@
             margin-top: 10px;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
 </head>
 <body>
     <div class="nav">
-        <button id="showForm" aria-label="Show Form">Tööriist</button>
-        <button id="showSavedSearches" aria-label="Show Saved Searches">Hanked</button>
+        <button id="showForm" class="active" aria-label="Show Form"><i class="fas fa-tools"></i> Tööriist</button>
+        <button id="showSavedSearches" aria-label="Show Saved Searches"><i class="fas fa-folder-open"></i> Hanked</button>
+        <button id="showHistory" aria-label="Show History"><i class="fas fa-history"></i> Ajalugu</button>
+        <button id="settingsButton" aria-label="Show Settings"><i class="fas fa-cog"></i> Sätted</button>
     </div>
     <div id="currentDateTime"></div>
-    <button id="settingsButton" style="position: absolute; top: 10px; right: 10px;">Sätted</button>
-    <div class="nav-right">
-        <button id="showHistory" aria-label="Show History">Ajalugu</button>
-    </div>
     <div class="container" id="formContainer">
         <h2>Menetluse andmed</h2>
         <form id="procurementForm">
@@ -417,18 +437,18 @@
             </select><br><br>
             <label for="contractSigningDate">Lepingu Allkirjastamise Kuupäev:</label>
             <input type="date" id="contractSigningDate" name="contractSigningDate" required><br><br>
-            <button type="submit">Arvuta menetlusaeg</button>
+            <button type="submit"><i class="fas fa-calculator"></i> Arvuta menetlusaeg</button>
         </form>
 
         <div id="result"></div>
-        <button id="clearFields" class="clear-button">Puhasta</button>
-        <button id="saveFields" class="save-button">Salvesta</button>
-        <button id="refreshFields" class="refresh-button">Uuenda</button>
+        <button id="clearFields" class="clear-button"><i class="fas fa-broom"></i> Puhasta</button>
+        <button id="saveFields" class="save-button"><i class="fas fa-save"></i> Salvesta</button>
+        <button id="refreshFields" class="refresh-button"><i class="fas fa-sync-alt"></i> Uuenda</button>
     </div>
 
     <div class="container hidden" id="savedSearchesContainer">
         <h2>Salvestatud Hanked</h2>
-        <table role="table">
+        <table>
             <thead>
                 <tr>
                     <th role="columnheader">Nimi</th>
@@ -436,7 +456,7 @@
                     <th role="columnheader">Maksumus</th>
                     <th role="columnheader">Eeldatav riigihanke menetlusaeg päevades</th>
                     <th role="columnheader">Riigihanke Taotluse Esitamise Kuupäev</th>
-                    <th role="columnheader">Uuenda</th>
+                    <th role="columnheader">Lepingu Allkirjastamise kuupäeva</th>
                     <th role="columnheader">Muuda</th>
                     <th role="columnheader">Kustuta</th>
                 </tr>
@@ -990,13 +1010,17 @@
             document.getElementById('formContainer').classList.remove('hidden');
             document.getElementById('savedSearchesContainer').classList.add('hidden');
             document.getElementById('historyContainer').classList.add('hidden');
+            document.getElementById('settingsContainer').classList.add('hidden');
+            setActiveTab(this);
         });
 
         document.getElementById('showSavedSearches').addEventListener('click', function() {
             document.getElementById('formContainer').classList.add('hidden');
             document.getElementById('savedSearchesContainer').classList.remove('hidden');
             document.getElementById('historyContainer').classList.add('hidden');
+            document.getElementById('settingsContainer').classList.add('hidden');
             updateSavedSearchesTable();
+            setActiveTab(this);
         });
 
         document.getElementById('showHistory').addEventListener('click', function() {
@@ -1006,8 +1030,15 @@
                 document.getElementById('settingsContainer').classList.add('hidden');
                 document.getElementById('historyContainer').classList.remove('hidden');
                 loadHistory();
+                setActiveTab(this);
             });
         });
+
+        function setActiveTab(button) {
+            const navButtons = document.querySelectorAll('.nav button');
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
 
         function updateSavedSearchesTable() {
             const tableBody = document.getElementById('savedSearchesTableBody');
@@ -1031,6 +1062,9 @@
             deleteSearch(index);
             document.getElementById('formContainer').classList.remove('hidden');
             document.getElementById('savedSearchesContainer').classList.add('hidden');
+            document.getElementById('historyContainer').classList.add('hidden');
+            document.getElementById('settingsContainer').classList.add('hidden');
+            setActiveTab(document.getElementById('showForm'));
         }
 
         function refreshDuration(index) {
