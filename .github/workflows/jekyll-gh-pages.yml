@@ -31,8 +31,10 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+      - name: Configure bundler path
+        run: bundle config set --local path 'vendor/bundle'
       - name: Install dependencies
-        run: bundle install --path vendor/bundle
+        run: bundle install
       - name: Build the site
         run: bundle exec jekyll build
       - name: Upload artifact
