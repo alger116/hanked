@@ -34,15 +34,17 @@ jobs:
 
       - name: Install dependencies
         run: bundle install
+        working-directory: ./  # Set the working directory to the root
 
       - name: Build the site
         run: bundle exec jekyll build
+        working-directory: ./  # Set the working directory to the root
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: jekyll-site
-          path: ./_site
+          path: ./_site  # Adjust path if necessary
 
   deploy:
     runs-on: ubuntu-latest
