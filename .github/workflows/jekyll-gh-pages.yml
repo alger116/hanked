@@ -24,6 +24,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: /home/runner/work/test/test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
