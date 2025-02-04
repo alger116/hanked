@@ -105,6 +105,8 @@ GEM
       pathutil (~> 0.9)
       rouge (>= 1.7, < 4)
       safe_yaml (~> 1.0)
+    jekyll-archives (2.2.1)
+      jekyll (>= 3.6, < 5.0)
     jekyll-avatar (0.8.0)
       jekyll (>= 3.0, < 5.0)
     jekyll-coffeescript (1.2.2)
@@ -256,7 +258,12 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
-  jekyll
+  jekyll-archives (~> 2.2)
+  jekyll-feed (~> 0.12)
+  jekyll-paginate (~> 1.1)
+  jekyll-redirect-from (~> 0.16)
+  jekyll-seo-tag (~> 2.6)
+  jekyll-sitemap (~> 1.4)
 
 BUNDLED WITH
    1.17.2
