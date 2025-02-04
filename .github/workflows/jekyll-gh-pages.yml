@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         run: bundle install
-        working-directory: ./  # Set the working directory to the root
+        working-directory: ${{ github.workspace }}  # Ensure the working directory is set to the GitHub workspace
 
       - name: Build the site
         run: bundle exec jekyll build
