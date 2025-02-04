@@ -34,17 +34,15 @@ jobs:
 
       - name: Install dependencies
         run: bundle install
-        working-directory: ./test  # Set the working directory to 'test'
 
       - name: Build the site
         run: bundle exec jekyll build
-        working-directory: ./test  # Set the working directory to 'test'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: jekyll-site
-          path: ./test/_site  # Adjust path if necessary
+          path: ./_site
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,11 +55,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: jekyll-site
-          path: ./test/_site  # Adjust path if necessary
+          path: ./_site
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./test/_site  # Adjust path if necessary
+          publish_dir: ./_site
 
