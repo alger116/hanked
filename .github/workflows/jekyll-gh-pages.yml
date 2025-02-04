@@ -31,8 +31,7 @@ jobs:
 
       - name: Configure bundler path
         run: bundle config set --local path 'vendor/bundle'
-        working-directory: ./  # Set the working directory to the root
-
+      
       - name: Ensure Gemfile is present
         run: |
           if [ ! -f ./Gemfile ]; then
@@ -42,17 +41,15 @@ jobs:
 
       - name: Install dependencies
         run: bundle install
-        working-directory: ./  # Ensure the working directory is set to the root
 
       - name: Build the site
         run: bundle exec jekyll build
-        working-directory: ./  # Set the working directory to the root
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: jekyll-site
-          path: ./_site  # Adjust path if necessary
+          path: ./_site
 
   deploy:
     runs-on: ubuntu-latest
