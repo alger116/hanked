@@ -1,3 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'rails' # or any other gem you need
+gem 'jekyll'
+gem 'github-pages'
