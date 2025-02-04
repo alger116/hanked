@@ -33,6 +33,8 @@ jobs:
           ruby-version: 2.7
       - name: Configure bundler path
         run: bundle config set --local path 'vendor/bundle'
+      - name: Change to project directory
+        run: cd /Users/viljarpartel/Desktop/test
       - name: Install dependencies
         run: bundle install
       - name: Build the site
