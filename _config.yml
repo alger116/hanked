@@ -10,7 +10,6 @@ theme: minima
 
 # Exclude these files and directories from the site build
 exclude:
-  - Gemfile
   - Gemfile.lock
   - node_modules
   - vendor/bundle
