@@ -1,12 +1,25 @@
 # filepath: /Users/viljarpartel/Desktop/test/_config.yml
 title: My Jekyll Site
 description: A simple Jekyll site
-baseurl: "/test" # the subpath of your site, e.g. /blog
-url: "https://alger116.github.io/hanked" # the base hostname & protocol for your site
+baseurl: "/hanked" # the subpath of your site, e.g. /blog
+url: "https://alger116.github.io" # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown
 theme: minima
+
+# Exclude these files and directories from the site build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle
+  - .github
+  - .gitignore
+
+# Include these files and directories in the site build
+include:
+  - _pages
 
 # Plugins
 plugins:
@@ -16,3 +29,15 @@ plugins:
   - jekyll-paginate
   - jekyll-archives
   - jekyll-redirect-from
+
+# Pagination settings
+paginate: 5
+paginate_path: "/page:num/"
+
+# Markdown settings
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
