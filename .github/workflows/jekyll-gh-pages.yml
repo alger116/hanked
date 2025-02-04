@@ -29,6 +29,9 @@ jobs:
         with:
           ruby-version: 2.7.8
 
+      - name: Update RubyGems
+        run: gem update --system
+
       - name: Configure bundler path
         run: bundle config set --local path 'vendor/bundle'
         working-directory: ./  # Set the working directory to the root
