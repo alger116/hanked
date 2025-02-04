@@ -72,6 +72,7 @@ jobs:
             git reset --hard
             git commit --allow-empty -m "Initializing gh-pages branch"
             git push origin gh-pages
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
