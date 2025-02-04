@@ -33,16 +33,15 @@ jobs:
         run: bundle config set --local path 'vendor/bundle'
         working-directory: ./  # Set the working directory to the root
 
-      - name: Install dependencies
-        run: bundle install
-        working-directory: ./  # Ensure the working directory is set to the root
-
       - name: Ensure Gemfile is present
         run: |
           if [ ! -f ./Gemfile ]; then
             echo "Gemfile not found!"
             exit 1
           fi
+
+      - name: Install dependencies
+        run: bundle install
         working-directory: ./  # Ensure the working directory is set to the root
 
       - name: Build the site
