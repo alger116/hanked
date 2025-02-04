@@ -29,6 +29,8 @@ jobs:
           ruby-version: 2.7
       - name: Configure bundler path
         run: bundle config set --local path 'vendor/bundle'
+      - name: Change to test directory
+        run: cd test
       - name: Install dependencies
         run: bundle install
       - name: Build the site
