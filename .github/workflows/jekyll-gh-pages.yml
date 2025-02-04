@@ -31,6 +31,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+      - name: Change to correct directory
+        run: cd path/to/subdirectory  # Ensure this path is correct
       - name: Install dependencies
         run: bundle install --path vendor/bundle
       - name: Build the site
