@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /home/runner/work/test/test
+        working-directory: /home/runner/work/hanked/hanked
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
