@@ -23,21 +23,28 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
+
       - name: Configure bundler path
         run: bundle config set --local path 'vendor/bundle'
+
       - name: Install dependencies
         run: bundle install
+        working-directory: ./test  # Set the working directory to the folder containing the Gemfile
+
       - name: Build the site
         run: bundle exec jekyll build
+        working-directory: ./test  # Set the working directory to the folder containing the Gemfile
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: jekyll-site
-          path: ./_site
+          path: ./test/_site  # Adjust path if necessary
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,14 +52,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: jekyll-site
-          path: ./_site
+          path: ./test/_site  # Adjust path if necessary
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+          publish_dir: ./test/_site  # Adjust path if necessary
 
