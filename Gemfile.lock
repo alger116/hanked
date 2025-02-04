@@ -259,7 +259,6 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
-  jekyll
   jekyll-archives (~> 2.2)
   jekyll-feed (~> 0.12)
   jekyll-paginate (~> 1.1)
