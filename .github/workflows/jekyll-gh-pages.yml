@@ -63,6 +63,17 @@ jobs:
         with:
           name: jekyll-site
           path: ./_site
+      
+      - name: Create gh-pages branch if it doesn't exist
+        run: |
+          git fetch
+          if ! git rev-parse --verify origin/gh-pages; then
+            git checkout --orphan gh-pages
+            git reset --hard
+            git commit --allow-empty -m "Initializing gh-pages branch"
+            git push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
