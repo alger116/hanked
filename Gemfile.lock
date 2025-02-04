@@ -251,6 +251,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (1.8.0)
+    webrick (1.9.1)
     zeitwerk (2.6.18)
 
 PLATFORMS
@@ -258,12 +259,14 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
+  jekyll
   jekyll-archives (~> 2.2)
   jekyll-feed (~> 0.12)
   jekyll-paginate (~> 1.1)
   jekyll-redirect-from (~> 0.16)
   jekyll-seo-tag (~> 2.6)
   jekyll-sitemap (~> 1.4)
+  webrick
 
 BUNDLED WITH
    1.17.2
